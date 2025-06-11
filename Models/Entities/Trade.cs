@@ -20,6 +20,5 @@ namespace DataAccess.Entities
         public decimal TradePrice { get; set; }
 
         public DateTime TradeDate { get; set; } = DateTime.UtcNow;
-
     }
 }

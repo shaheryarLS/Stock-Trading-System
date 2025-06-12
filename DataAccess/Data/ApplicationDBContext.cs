@@ -1,5 +1,6 @@
 ﻿using DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
+using Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,30 @@ namespace DataAccess.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            // Add any additional model configurations here
         }
-        // Define DbSets for your entities here, e.g.:
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker.Entries<BaseEntity>();
+
+            foreach (var entry in entries)
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedAt = DateTime.UtcNow;
+                    entry.Entity.IsActive = true;
+                    // TODO: entry.Entity.CreatedBy = currentUserId;
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.ModifiedAt = DateTime.UtcNow;
+                     //TODO: entry.Entity.ModifiedBy = currentUserId;
+                }
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Stock> Stocks { get; set; }
         public DbSet<Trade> Trades { get; set; }

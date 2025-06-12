@@ -16,9 +16,15 @@ namespace Stock_Trading_System.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll
+        (
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string? sortBy = "Symbol",
+            [FromQuery] bool sortAsc = false
+        )
         {
-            var stocks = await _stockService.GetAllAsync();
+            var stocks = await _stockService.GetAllAsync(page, pageSize, sortBy, sortAsc);
             return Ok(stocks);
         }
 
@@ -26,6 +32,16 @@ namespace Stock_Trading_System.Controllers
         public async Task<ActionResult<StockDto>> GetById(int id)
         {
             var stock = await _stockService.GetByIdAsync(id);
+            if (stock == null)
+                return NotFound();
+
+            return Ok(stock);
+        }
+
+        [HttpGet("symbol/{symbol}")]
+        public async Task<IActionResult> GetBySymbol(string symbol)
+        {
+            var stock = await _stockService.GetBySymbolAsync(symbol);
             if (stock == null)
                 return NotFound();
 

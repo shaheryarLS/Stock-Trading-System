@@ -69,7 +69,7 @@ namespace Repositories.Implementations
 
         public async Task<Stock?> GetBySymbolAsync(string symbol)
         {
-            return await _stocks.FirstOrDefaultAsync(s => s.Symbol == symbol && s.IsActive);
+            return await _stocks.FirstOrDefaultAsync(s => s.Symbol == symbol);
         }
 
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();

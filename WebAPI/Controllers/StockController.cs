@@ -22,6 +22,16 @@ namespace Stock_Trading_System.Controllers
             return Ok(stocks);
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<StockDto>> GetById(int id)
+        {
+            var stock = await _stockService.GetByIdAsync(id);
+            if (stock == null)
+                return NotFound();
+
+            return Ok(stock);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateStockDto dto)
         {
@@ -31,5 +41,27 @@ namespace Stock_Trading_System.Controllers
             var created = await _stockService.CreateAsync(dto);
             return CreatedAtAction(nameof(GetAll), new { id = created.StockId }, created);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _stockService.DeleteStockAsync(id);
+            if (!result)
+                return NotFound();
+
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateStock(int id, [FromBody] UpdateStockDto stockDto)
+        {
+            var result = await _stockService.UpdateStockAsync(id, stockDto);
+            if (!result)
+                return NotFound();
+
+            return NoContent();
+        }
+
+
     }
 }

@@ -13,8 +13,14 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+// Register specific repositories
+builder.Services.AddScoped<IStockRepository, StockRepository>();
+
+
+// Register services
 builder.Services.AddScoped<IStockService, StockService>();
+
+
 builder.Services.AddAutoMapper(typeof(StockProfile));
 
 

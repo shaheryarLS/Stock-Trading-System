@@ -10,6 +10,7 @@ namespace Stock_Trading_System.Profiles
         {
             CreateMap<Stock, StockDto>();
             CreateMap<CreateStockDto, Stock>();
+            CreateMap<UpdateStockDto, Stock>();
         }
     }
 }

@@ -15,17 +15,15 @@ namespace Repositories.Implementations
     public class StockRepository : IStockRepository
     {
         private readonly ApplicationDBContext _context;
-        private readonly DbSet<Stock> _stocks;
 
         public StockRepository(ApplicationDBContext context)
         {
             _context = context;
-            _stocks = context.Set<Stock>();
         }
 
         public async Task<PagedResult<Stock>> GetPagedAsync(int page = 1, int pageSize = 10, string? sortBy = null, bool ascending = true)
         {
-            var query = _stocks.AsQueryable().Where(s => s.IsActive);
+            var query = _context.Stocks.AsQueryable().Where(s => s.IsActive);
 
             query = sortBy switch
             {
@@ -54,22 +52,22 @@ namespace Repositories.Implementations
 
         public async Task<Stock?> GetByIdAsync(object id)
         {
-            var stock = await _stocks.FindAsync(id);
+            var stock = await _context.Stocks.FindAsync(id);
             return stock is { IsActive: true } ? stock : null;
         }
 
-        public async Task AddAsync(Stock stock) => await _stocks.AddAsync(stock);
-        public void Update(Stock stock) => _stocks.Update(stock);
+        public async Task AddAsync(Stock stock) => await _context.Stocks.AddAsync(stock);
+        public void Update(Stock stock) => _context.Stocks.Update(stock);
 
         public void Delete(Stock stock)
         {
             stock.IsActive = false;
-            _stocks.Update(stock);
+            _context.Stocks.Update(stock);
         }
 
         public async Task<Stock?> GetBySymbolAsync(string symbol)
         {
-            return await _stocks.FirstOrDefaultAsync(s => s.Symbol == symbol);
+            return await _context.Stocks.FirstOrDefaultAsync(s => s.Symbol == symbol);
         }
 
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();

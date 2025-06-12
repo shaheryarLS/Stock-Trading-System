@@ -84,6 +84,5 @@ namespace Services.Implementations
 
             return _mapper.Map<StockDto>(stock);
         }
-
     }
 }

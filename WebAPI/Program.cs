@@ -11,7 +11,7 @@ using Stock_Trading_System.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => { options.User.RequireUniqueEmail = true; })
     .AddEntityFrameworkStores<ApplicationDBContext>()
     .AddDefaultTokenProviders();
 
@@ -32,11 +32,10 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ITradeRepository, TradeRepository>();
 
-
 // services
 builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<ITradeService, TradeService>();
-
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddAutoMapper(typeof(StockProfile));
 

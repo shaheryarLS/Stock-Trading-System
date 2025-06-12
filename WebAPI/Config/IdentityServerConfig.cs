@@ -32,7 +32,7 @@ namespace Stock_Trading_System.Config
                         new Secret("supersecret".Sha256())
                     },
 
-                    AllowedScopes = { "openid", "profile", "stockApi", "tradeApi", "userApi" }
+                    AllowedScopes = { "openid", "profile", "stockApi" }
                 }
             };
     }

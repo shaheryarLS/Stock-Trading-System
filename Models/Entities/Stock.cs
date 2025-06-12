@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Entities
 {
-    public class Stock
+    public class Stock: BaseEntity
     {
         [Key]
         public int StockId { get; set; }

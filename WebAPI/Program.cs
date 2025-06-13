@@ -37,12 +37,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.Authority = "https://localhost:5445";
-        options.Audience = "stockApi";
+        options.Audience = "protectedApi";
         options.RequireHttpsMetadata = false; // Development only
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateAudience = true,
-            ValidAudience = "stockApi",
+            ValidAudience = "protectedApi",
             ValidateIssuer = true,
             ValidIssuer = "https://localhost:5445",
             ValidateLifetime = true,
@@ -54,10 +54,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Add authorization policy
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("StockPolicy", policy =>
+    options.AddPolicy("AccessPolicy", policy =>
     {
         policy.RequireAuthenticatedUser();
-        policy.RequireClaim("scope", "stockApi");
+        policy.RequireClaim("scope", "protectedApi");
         policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
     });
 });

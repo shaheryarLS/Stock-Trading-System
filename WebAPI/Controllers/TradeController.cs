@@ -7,6 +7,7 @@ namespace Stock_Trading_System.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Policy = "AccessPolicy")]
     public class TradeController : ControllerBase
     {
         private readonly ITradeService _tradeService;
@@ -16,7 +17,6 @@ namespace Stock_Trading_System.Controllers
             _tradeService = tradeService;
         }
 
-        [Authorize(Policy = "StockPolicy")]
         [HttpGet]
         public async Task<IActionResult> GetAll
         (
@@ -35,6 +35,12 @@ namespace Stock_Trading_System.Controllers
         {
             var trade = await _tradeService.CreateAsync(dto);
             return CreatedAtAction(nameof(GetAll), new { id = trade.TradeId }, trade);
+        }
+
+        [HttpGet("secret")]
+        public IActionResult Secret()
+        {
+            return Ok("This is a secret message from the TradeController!");
         }
     }
 

@@ -7,7 +7,7 @@ namespace Stock_Trading_System.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Policy = "AccessPolicy")]
     public class StockController : ControllerBase
     {
         private readonly IStockService _stockService;

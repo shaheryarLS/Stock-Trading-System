@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Services.DTOs;
 using Services.Interfaces;
+using System.Security.Claims;
 
 namespace Stock_Trading_System.Controllers
 {
@@ -40,7 +41,14 @@ namespace Stock_Trading_System.Controllers
         [HttpGet("secret")]
         public IActionResult Secret()
         {
-            return Ok("This is a secret message from the TradeController!");
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+            var claims = User.Claims.Select(c => new { Type = c.Type, Value = c.Value }).ToList();
+            return Ok(new
+            {
+                Message = "This is a secret message from the TradeController!",
+                UserId = userId,
+                Claims = claims
+            });
         }
     }
 

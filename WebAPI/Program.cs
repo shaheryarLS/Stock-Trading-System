@@ -1,5 +1,6 @@
 using DataAccess.Data;
 using DataAccess.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -11,7 +12,7 @@ using Services.Implementations;
 using Services.Interfaces;
 using Stock_Trading_System.Config;
 using Stock_Trading_System.Profiles;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +26,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 
 // Add IdentityServer
 builder.Services.AddIdentityServer()
-    .AddDeveloperSigningCredential() // Development only
+    .AddDeveloperSigningCredential() 
     .AddInMemoryClients(IdentityServerConfig.Clients)
     .AddInMemoryIdentityResources(IdentityServerConfig.IdentityResources)
     .AddInMemoryApiScopes(IdentityServerConfig.ApiScopes)
@@ -38,7 +39,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.Authority = "https://localhost:5445";
         options.Audience = "protectedApi";
-        options.RequireHttpsMetadata = false; // Development only
+        options.RequireHttpsMetadata = false; 
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateAudience = true,
@@ -47,7 +48,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = "https://localhost:5445",
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            NameClaimType = "sub"
+            NameClaimType = ClaimTypes.NameIdentifier
         };
     });
 
@@ -69,9 +70,13 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Repositories and Services
+// Repositories
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ITradeRepository, TradeRepository>();
+
+// Services
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<ITradeService, TradeService>();
 builder.Services.AddScoped<IAuthService, AuthService>();

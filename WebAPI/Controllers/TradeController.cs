@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Services.DTOs;
 using Services.Interfaces;
 
@@ -15,6 +16,7 @@ namespace Stock_Trading_System.Controllers
             _tradeService = tradeService;
         }
 
+        [Authorize(Policy = "StockPolicy")]
         [HttpGet]
         public async Task<IActionResult> GetAll
         (
